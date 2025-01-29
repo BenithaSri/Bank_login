@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Poster from "./poster";
+import Navbar from "./navbar";
 
 function LoginForm() {
   //Captcha
@@ -33,18 +34,8 @@ function LoginForm() {
 
   return (
     <>
-
-        <div className="navbar">
-            <img src="/home.png" alt="home" />
-            <br />
-            <img src="/loan.png" alt="loan" />
-            <br />
-            <img src="/help.png" alt="credit" />
-            <br />
-            <img src="/contact.png" alt="invest" />
-            <br />
-      </div>
-
+      <h1 className="welcome">Welcome to Internet Banking</h1>
+      <Navbar />
       <div className="login-container">
         <div className="login-form">
           <h1>Login</h1>
@@ -62,7 +53,7 @@ function LoginForm() {
             <input type="password" id="password" name="password" required />
             <br />
             {/* <label htmlFor="remember-me">Remember Me</label>
-    <input type="checkbox" id="remember-me" name="remember-me" /><br /> */}
+            <input type="checkbox" id="remember-me" name="remember-me" /><br /> */}
             <label htmlFor="captcha">
               Captcha <span style={{ color: "red" }}>*</span>
             </label>
