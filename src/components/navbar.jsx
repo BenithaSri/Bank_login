@@ -14,6 +14,7 @@ function navbar() {
             <br />
             <img src="/forms.png" alt="Forms" />
             <br />
+            <img src="/zelle.png" alt="Zelle" />
          </div>
       
     </div>

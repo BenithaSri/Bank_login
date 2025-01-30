@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Poster from "./poster";
 import Navbar from "./navbar";
 
@@ -40,17 +41,17 @@ function LoginForm() {
         <div className="login-form">
           <h1>Login</h1>
           <form>
-            <label htmlFor="username">
-              Username <span style={{ color: "red" }}>*</span>
+            <label htmlFor="cid">
+              Customer ID <span style={{ color: "red" }}>*</span>
             </label>
             <br />
-            <input type="text" id="username" name="username" required />
+            <input type="text" id="cid" name="username" required />
             <br />
             <label htmlFor="password">
               Password <span style={{ color: "red" }}>*</span>
             </label>
             <br />
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" name="password" required minLength="10" />
             <br />
             {/* <label htmlFor="remember-me">Remember Me</label>
             <input type="checkbox" id="remember-me" name="remember-me" /><br /> */}
@@ -64,9 +65,9 @@ function LoginForm() {
             <input type="text" id="captcha" name="captcha" required />
             <br />
             <button type="submit">Login</button>
-
             <br />
-            <a href="/forgotpassword">Forgot Password?</a>
+            <Link to="/forgotpassword">Forgot Password?</Link>
+            <Link to="/signup">Sign Up</Link>
           </form>
         </div>
 
