@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import Poster from "./poster";
-import Navbar from "./navbar";
+import Footer from "./footer";
+import Header from "./header";
+import { GrFormViewHide } from "react-icons/gr";
+import { BiShow } from "react-icons/bi";
 
 function LoginForm() {
   //Captcha
@@ -30,31 +33,75 @@ function LoginForm() {
     setCaptcha(newCaptcha);
   };
 
-  //NavBar
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
+  const [cid, setCID] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = async (e) =>{
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cid, password }),
+      });
+
+      if (response.ok) {
+        console.log("Login successful!");
+        navigate("/dashboard"); // Redirect to dashboard
+      } else {
+        alert("Invalid credentials! Try again.");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      alert("An error occurred. Please try again.");
+    }
+  }
+
+  const [showPassword, setShowPassword] = useState("false");
+
+  
   return (
-    <>
-      <h1 className="welcome">Welcome to Internet Banking</h1>
-      <Navbar />
+    <> 
+      <Header />
       <div className="login-container">
         <div className="login-form">
           <h1>Login</h1>
-          <form>
+          <form onSubmit={handleSubmit}>
             <label htmlFor="cid">
               Customer ID <span style={{ color: "red" }}>*</span>
             </label>
             <br />
-            <input type="text" id="cid" name="username" required />
+            <input type="text" id="cid" name="customerID" required  onChange={(e) =>{setCID(e.target.value)}}/>
             <br />
             <label htmlFor="password">
               Password <span style={{ color: "red" }}>*</span>
             </label>
             <br />
-            <input type="password" id="password" name="password" required minLength="10" />
+            <div  style={{ position: "relative" }}>
+            <input type={showPassword ? "password" : "text"} id="password" name="password" required minLength="10"  onChange={(e) => {setPassword(e.target.value)}}/>
+            <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  border: "none",
+                  background: "transparent",
+                }}>
+                {showPassword ? <GrFormViewHide /> : <BiShow />}{" "}
+                {/* Change icon based on state */}
+              </button>
+            </div>
+            
             <br />
-            {/* <label htmlFor="remember-me">Remember Me</label>
-            <input type="checkbox" id="remember-me" name="remember-me" /><br /> */}
+            
             <label htmlFor="captcha">
               Captcha <span style={{ color: "red" }}>*</span>
             </label>
@@ -72,7 +119,9 @@ function LoginForm() {
         </div>
 
         <Poster />
+        
       </div>
+      <Footer />
     </>
   );
 }

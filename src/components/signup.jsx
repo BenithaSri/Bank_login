@@ -1,132 +1,208 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./navbar";
+import Poster from "./poster";
+import Header from "./header";
+import Footer from "./footer";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { GrFormViewHide } from "react-icons/gr";
+import { BiShow } from "react-icons/bi";
 
 function Signup() {
   const [captcha, setCaptcha] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
-  const [password, setPasswords] = useState("");
-  const [confirmPassword, setConfirmPasswords] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({
     captcha: "",
     password: "",
     confirmPassword: "",
   });
-  const [successMessage, setSuccessMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
+  // Generate a random captcha string
   function generateRandomString(length = 6) {
-    let characters =
+    const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-    }
-    return result;
+    return Array.from({ length }, () =>
+      characters.charAt(Math.floor(Math.random() * characters.length))
+    ).join("");
   }
 
+  // Generate captcha on component mount
   useEffect(() => {
     setCaptcha(generateRandomString());
   }, []);
 
+  // Refresh captcha
   const handleRefreshCaptcha = () => {
     setCaptcha(generateRandomString());
     setCaptchaInput("");
     setErrors({ ...errors, captcha: "" });
   };
 
+  // Form validation
   const validation = () => {
     let valid = true;
-    let errors = {};
+    const newErrors = {};
 
     // Captcha validation
     if (captchaInput !== captcha) {
-      errors.captcha = "Captcha does not match";
+      newErrors.captcha = "Captcha does not match";
       valid = false;
     }
 
     // Password validation
     if (password.length < 10) {
-      errors.password = "Password must be at least 8 characters long";
+      newErrors.password = "Password must be at least 10 characters long";
       valid = false;
     }
 
     // Confirm Password validation
-    if (password !== confirmPassword
-        && confirmPassword.length > 0) {
-      errors.confirmPassword = "Passwords do not match";
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
       valid = false;
     }
 
-    setErrors(errors);
+    setErrors(newErrors);
     return valid;
-  }
+  };
 
-  const handleSubmit = (e) => {
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = {
+      cid: e.target.cid?.value.trim(),
+      email: e.target.email?.value.trim(),
+      password,
+      confirmPassword,
+    };
+
+    if (!formData.cid || !formData.email || !formData.password || !formData.confirmPassword) {
+      alert("All fields are required.");
+      return;
+    }
+
     if (validation()) {
-      // Display success message
-      setSuccessMessage("Signup successful!");
-      
-      // Hide success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 3000);
+      try {
+        const response = await axios.post("http://localhost:3000/signup", formData);
+        console.log("Signup successful:", response.data);
+        alert("Signup successful!");
+      } catch (error) {
+        console.error("Error during signup:", error);
+        alert("Signup failed. Please try again.");
+      }
+    } else {
+      console.log("Form validation failed.");
     }
   };
 
-
   return (
     <div>
-      <h1 className="welcome">Welcome to Internet Banking</h1>
-      <Navbar />
+      <Header />
       <div className="login-container">
         <div className="login-form">
           <h1>Sign Up</h1>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="cid">Customer ID<span style={{ color: "red" }}>*</span> </label>
-            <input type="text" id="cid" name="username"  required/>
-            
-            <label htmlFor="accnumber">Account Number <span style={{ color: "red" }}>*</span></label>
-            <input type="text" id="accnumber" name="accountnumber" required length={16}/>
+            {/* Customer ID Field */}
+            <label htmlFor="cid">
+              Customer ID<span style={{ color: "red" }}>*</span>
+            </label>
+            <input type="text" id="cid" name="cid" required />
 
-            <label htmlFor="password">Password<span style={{ color: "red" }}>*</span></label>
-            <input type="password" id="password" name="password" required minLength={10} onChange={(e) => setPasswords(e.target.value)} />
-            {errors.password && (
-              <div style={{ color: "red" }}>{errors.password}</div>
-            )}
+            {/* Email Field */}
+            <label htmlFor="email">
+              Email ID<span style={{ color: "red" }}>*</span>
+            </label>
+            <input type="email" id="email" name="email" required />
 
-            <label htmlFor="confirm-password">Confirm Password<span style={{ color: "red" }}>*</span></label>
-            <input type="password" id="confirm-password" name="confirm-password" required minLength={10}  onChange={(e) => setConfirmPasswords(e.target.value)} />
-            {errors.confirmPassword && (
-              <div style={{ color: "red" }}>{errors.confirmPassword}</div>
-            )}
+            {/* Password Field */}
+            <label>Password:</label>
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                minLength="10"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  border: "none",
+                  background: "transparent",
+                }}>
+                {showPassword ? <BiShow /> : <GrFormViewHide />}
+              </button>
+            </div>
+            {errors.password && <div style={{ color: "red" }}>{errors.password}</div>}
 
-            <label htmlFor="captcha">Captcha<span style={{ color: "red" }}>*</span></label>
+            {/* Confirm Password Field */}
+            <label htmlFor="confirm-password">
+              Confirm Password<span style={{ color: "red" }}>*</span>
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="confirmPassword"
+                name="confirmPassword"
+                required
+                minLength={10}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  border: "none",
+                  background: "transparent",
+                }}>
+                {showPassword ? <BiShow /> : <GrFormViewHide />}
+              </button>
+            </div>
+            {errors.confirmPassword && <div style={{ color: "red" }}>{errors.confirmPassword}</div>}
+
+            {/* Captcha Field */}
+            <label htmlFor="captcha">
+              Captcha<span style={{ color: "red" }}>*</span>
+            </label>
             <div className="captcha-container">{captcha}</div>
             <button type="button" onClick={handleRefreshCaptcha}>
               Refresh Captcha
             </button>
-            <input type="text" id="captcha" name="captcha" required onChange={(e) => setCaptchaInput(e.target.value)} />
-            <br />  
-            {
-              errors.captcha && (
-                <div style={{ color: "red" }}>{errors.captcha}</div>
-              )
-            }
+            <input
+              type="text"
+              id="captcha"
+              name="captcha"
+              required
+              value={captchaInput}
+              onChange={(e) => setCaptchaInput(e.target.value)}
+            />
+            {errors.captcha && <div style={{ color: "red" }}>{errors.captcha}</div>}
+
+            {/* Submit Button */}
             <button type="submit">Sign Up</button>
+
+            {/* Login Link */}
             <br />
             <Link to="/">Already have an account? Login</Link>
-            <br />
           </form>
-          {successMessage && (
-            <div style={{ color: "green", marginTop: "10px" }}>
-              {successMessage}
-            </div>
-          )}
         </div>
+        <Poster />
       </div>
+      <Footer />
     </div>
   );
 }
