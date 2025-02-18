@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import Poster from "./poster";
 import Header from "./header";
 import Footer from "./footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { GrFormViewHide } from "react-icons/gr";
 import { BiShow } from "react-icons/bi";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Signup() {
+  const navigate = useNavigate();
   const [captcha, setCaptcha] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +22,6 @@ function Signup() {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  // Generate a random captcha string
   function generateRandomString(length = 6) {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
@@ -28,36 +30,30 @@ function Signup() {
     ).join("");
   }
 
-  // Generate captcha on component mount
   useEffect(() => {
     setCaptcha(generateRandomString());
   }, []);
 
-  // Refresh captcha
   const handleRefreshCaptcha = () => {
     setCaptcha(generateRandomString());
     setCaptchaInput("");
     setErrors({ ...errors, captcha: "" });
   };
 
-  // Form validation
   const validation = () => {
     let valid = true;
     const newErrors = {};
 
-    // Captcha validation
     if (captchaInput !== captcha) {
       newErrors.captcha = "Captcha does not match";
       valid = false;
     }
 
-    // Password validation
     if (password.length < 10) {
       newErrors.password = "Password must be at least 10 characters long";
       valid = false;
     }
 
-    // Confirm Password validation
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
       valid = false;
@@ -67,10 +63,8 @@ function Signup() {
     return valid;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = {
       cid: e.target.cid?.value.trim(),
       email: e.target.email?.value.trim(),
@@ -78,22 +72,50 @@ function Signup() {
       confirmPassword,
     };
 
-    if (!formData.cid || !formData.email || !formData.password || !formData.confirmPassword) {
-      alert("All fields are required.");
+    if (
+      !formData.cid ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      toast.error("All fields are required.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
       return;
     }
 
     if (validation()) {
       try {
-        const response = await axios.post("http://localhost:3000/signup", formData);
-        console.log("Signup successful:", response.data);
-        alert("Signup successful!");
+        const response = await axios.post(
+          "http://localhost:3000/signup",
+          formData
+        );
+        toast.success("Signup Successful!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       } catch (error) {
-        console.error("Error during signup:", error);
-        alert("Signup failed. Please try again.");
+        toast.error(error.response?.data?.message || "Signup failed. Please try again.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true
+        });
       }
-    } else {
-      console.log("Form validation failed.");
     }
   };
 
@@ -104,19 +126,16 @@ function Signup() {
         <div className="login-form">
           <h1>Sign Up</h1>
           <form onSubmit={handleSubmit}>
-            {/* Customer ID Field */}
             <label htmlFor="cid">
               Customer ID<span style={{ color: "red" }}>*</span>
             </label>
             <input type="text" id="cid" name="cid" required />
 
-            {/* Email Field */}
             <label htmlFor="email">
               Email ID<span style={{ color: "red" }}>*</span>
             </label>
             <input type="email" id="email" name="email" required />
 
-            {/* Password Field */}
             <label>Password:</label>
             <div style={{ position: "relative" }}>
               <input
@@ -141,9 +160,10 @@ function Signup() {
                 {showPassword ? <BiShow /> : <GrFormViewHide />}
               </button>
             </div>
-            {errors.password && <div style={{ color: "red" }}>{errors.password}</div>}
+            {errors.password && (
+              <div style={{ color: "red" }}>{errors.password}</div>
+            )}
 
-            {/* Confirm Password Field */}
             <label htmlFor="confirm-password">
               Confirm Password<span style={{ color: "red" }}>*</span>
             </label>
@@ -172,9 +192,10 @@ function Signup() {
                 {showPassword ? <BiShow /> : <GrFormViewHide />}
               </button>
             </div>
-            {errors.confirmPassword && <div style={{ color: "red" }}>{errors.confirmPassword}</div>}
+            {errors.confirmPassword && (
+              <div style={{ color: "red" }}>{errors.confirmPassword}</div>
+            )}
 
-            {/* Captcha Field */}
             <label htmlFor="captcha">
               Captcha<span style={{ color: "red" }}>*</span>
             </label>
@@ -190,12 +211,12 @@ function Signup() {
               value={captchaInput}
               onChange={(e) => setCaptchaInput(e.target.value)}
             />
-            {errors.captcha && <div style={{ color: "red" }}>{errors.captcha}</div>}
+            {errors.captcha && (
+              <div style={{ color: "red" }}>{errors.captcha}</div>
+            )}
 
-            {/* Submit Button */}
             <button type="submit">Sign Up</button>
 
-            {/* Login Link */}
             <br />
             <Link to="/">Already have an account? Login</Link>
           </form>
@@ -203,8 +224,23 @@ function Signup() {
         <Poster />
       </div>
       <Footer />
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
 
 export default Signup;
+
+

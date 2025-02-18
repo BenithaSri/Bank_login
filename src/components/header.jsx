@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Navbar from "./navbar";
 import { Link } from "react-router-dom";
 import Marquee from "react-fast-marquee";
@@ -6,7 +6,7 @@ import Marquee from "react-fast-marquee";
 function header() {
   return (
     <div>
-          <div>
+      <div>
         <Link to="/support" className="home-login">
           Support
         </Link>
@@ -24,12 +24,11 @@ function header() {
       <div className="marquee-container">
         <Marquee speed={50} pauseOnHover gradient>
           🚀 New Interest Rates Announced | 🏦 Loan Offers for 2025 | 📢 Secure
-          Online Banking Now Available! | 💰 Earn Rewards with our Credit Card | 💰 Savings for Kids!
+          Online Banking Now Available! | 💰 Earn Rewards with our Credit Card |
+          💰 Savings for Kids!
         </Marquee>
       </div>
       <Navbar />
-      <br />
-      
     </div>
   );
 }

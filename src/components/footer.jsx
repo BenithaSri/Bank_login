@@ -13,13 +13,13 @@ function footer() {
         <div className="footer">
             <br />
            <div className=' footer-link'>
-             <Link to="#">About Us</Link>  |
-              <Link to="#">Contact Us</Link> |
-              <Link to="#">Privacy Policy</Link> |
-              <Link to="#">Terms of Use</Link> |
-              <Link to="#">Careers</Link> |
-              <Link to="#">Sitemap</Link> |
-              <Link to="#">Feedback</Link>
+             <Link to="#"> 🔗About Us</Link>  
+              <Link to="#">🔗Contact Us</Link> 
+              <Link to="#">🔗Privacy Policy</Link> 
+              <Link to="#">🔗Terms of Use</Link> 
+              <Link to="#">🔗Careers</Link> 
+              <Link to="#">🔗Sitemap</Link> 
+              <Link to="#">🔗Feedback</Link>
            </div>
            <br/>
            <div className='footer-address'>

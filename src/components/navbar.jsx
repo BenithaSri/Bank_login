@@ -13,9 +13,8 @@ function navbar() {
         <Link to="/about">About</Link>
         <Link to="/education">Education</Link>
         <Link to="/appointment">Appointments</Link>
-        <div className="search-container">
-          <input type="text" placeholder="Search" />
-        </div>
+        <Link to="/contact">Contact</Link>
+        <Link to="/kids"></Link>
       </div>
     </div>
   );

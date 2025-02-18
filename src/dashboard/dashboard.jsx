@@ -54,7 +54,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="wallet">
+      {/* <div className="wallet">
         <h2>Wallet</h2>
         <p>Available Balance: $50,000</p>
         <div className="cards">
@@ -124,7 +124,7 @@ function Dashboard() {
             YouTube - $200
           </li>
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 }

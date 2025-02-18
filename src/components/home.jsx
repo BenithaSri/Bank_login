@@ -11,6 +11,7 @@ import { BiTransfer } from "react-icons/bi";
 import { LiaMoneyCheckAltSolid } from "react-icons/lia";
 import { RiBillLine } from "react-icons/ri";
 import { ImHappy } from "react-icons/im";
+import "./home.css";
 
 
 

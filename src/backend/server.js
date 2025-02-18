@@ -115,19 +115,27 @@ app.post('/login', async (req, res) => {
 
 
 
-app.delete('/delete/:cid', async (req, res) =>{
-  
-  try{
-    const deleteUser = await User.findByIdAndDelete(req.params.id);
-    if (!deleteUser){
-      return res.status(404).json({ message: "User not found" });
-    } 
-    res.status(200).json({message: "User deleted sucessfully!"});
-  }
-  catch(error){
-    res.status(500).json({error: "Deletion Failed"});
-  }
+app.delete('/delete/:cid', async (req, res) => {
+  try {
+    const { cid } = req.params;
 
+    console.log("Delete Request Received for CID:", cid);
+
+    // Ensure we're deleting the correct type (number or string)
+    const deleteUser = await User.findOneAndDelete({ cid: Number(cid) });
+
+    if (!deleteUser) {
+      console.log("User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("User Deleted Successfully:", deleteUser);
+    res.status(200).json({ message: "User deleted successfully!" });
+
+  } catch (error) {
+    console.error("Delete Error:", error);
+    res.status(500).json({ error: "Deletion Failed" });
+  }
 });
 
 
@@ -138,9 +146,8 @@ app.put('/update/:cid', async (req, res) => {
     const updateData = req.body; // Assuming you pass the data to update in the body
 
     // Convert to ObjectId if needed
-    const objectId = mongoose.Types.ObjectId(cid);
+    const updatedUser = await User.findOneAndUpdate({ cid }, updateData, { new: true });
 
-    const updatedUser = await User.findByIdAndUpdate(objectId, updateData, { new: true });
 
     if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
