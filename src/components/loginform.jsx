@@ -86,23 +86,31 @@ function LoginForm() {
 
   return (
     <>
-      <h1 style={{ color: "white", backgroundColor: "#1a365d", margin: "0px" }}>
+      <h1
+        className="login-head"
+        style={{ color: "white", backgroundColor: "#1a365d", margin: "0px" }}>
         Welcome to our Bank!{" "}
-        <Link to="/home">
-          <img
-            src="/bank.png"
-            alt="bankLogo"
-            style={{
-              width: "50px",
-              height: "50px",
-              position: "absolute",
-              top: "0",
-              right: "0",
-              bottom: "0",
-              margin: "5px",
-            }}
-          />
-        </Link>
+        <div className="head-links">
+          <Link to="/support"> Support </Link>
+          <Link to="/"> Log in </Link>
+          <Link to="/signup">Sign up</Link>
+          <Link to="/home">
+            {" "}
+            <img
+              src="/bank.png"
+              alt="bankLogo"
+              style={{
+                width: "50px",
+                height: "50px",
+                position: "absolute",
+                top: "0",
+                right: "0",
+                bottom: "0",
+                margin: "5px",
+              }}
+            />
+          </Link>
+        </div>
       </h1>
 
       <div className="login-container">
@@ -154,23 +162,25 @@ function LoginForm() {
                 {/* Change icon based on state */}
               </button>
             </div>
-
             <br />
-
             <label htmlFor="captcha">
               Captcha <span style={{ color: "red" }}>*</span>
-            </label>
-            <div className="captcha-container">{captcha}</div>
+            </label>  <div className="captcha-container">{captcha}</div>
+            
             <input type="text" id="captcha" name="captcha" required />
             <button type="button" onClick={handleRefreshCaptcha}>
               <FcRefresh />
             </button>
             <br />
-            <button type="submit">Login</button>
+            <label htmlFor="rememberMe"> Remember Me </label> 
+            <input type="checkbox" id="rememberMe" name="rememberMe" />
+            <button className="btn btn-primary" type="submit">Login</button>
             <br />
-            <Link to="/forgotpassword">Forgot Password?</Link> | 
+            <Link to="/forgotpassword">Forgot Password?</Link> |
             <Link to="/signup">Sign Up</Link>
           </form>
+          <br />
+          
         </div>
         <ToastContainer />
       </div>

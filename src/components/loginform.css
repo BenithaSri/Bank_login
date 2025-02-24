@@ -22,9 +22,44 @@
     font-size: 24px;
     margin: 0 0 10px 0; 
     padding: 0;
-    color: #333;
 }
 
+.login-head{
+    display: flex;
+    flex-direction: row;
+    font-weight: 200px;
+}
+
+.head-links{
+    margin-left: 400px;
+    font-size: 20px;
+    float: right;
+    border: none;
+    cursor: pointer;
+    color: gray;
+    padding: 10px 20px; 
+}
+
+.login-form button{
+    margin-top: 0%;
+    color: #1a365d;
+}
+
+.remember-me {
+    margin-bottom: 1rem;
+  }
+  
+  .remember-me label {
+    display: flex;
+    align-items: center;
+  }
+  
+  .remember-me input[type="checkbox"] {
+    margin-right: 4px;
+  }
+
+
+  
   .captcha-container {
     font-family: 'Courier New', monospace;
     font-size: 18px;
