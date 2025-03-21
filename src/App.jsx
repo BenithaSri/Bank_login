@@ -10,10 +10,10 @@ import "./App.css";
 function App() {
   return (
     <Routes>
+      <Route path="/home" element={<Home />} />
       <Route path="/" element={<LoginForm />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
-      <Route path="/home" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/resetpassword" element={<ResetPassword />} />
     </Routes>
